@@ -1,7 +1,8 @@
 // Import and require inquirer, express, and mysql2
 const inquirer = require('inquirer');
-const mysql = require('mysql');
+// const mysql = require('mysql2');
 const connection = require('./config/connection');
+const consoleTable = require('console.table');
 
 // Connect to mysql database
 connection.connect(function(err) {
@@ -30,7 +31,7 @@ function init() {
                         updateFunc();
                         break;
                     default:
-                        console.log("----------- You've exited the app -----------");
+                        console.log("----------- You've exited the app successfully! -----------");
                 }
 
             })
@@ -57,8 +58,44 @@ function viewFunc() {
                     employees();
                     break;
                 default:
-                    console.log("----------- You've exited the app -----------");
+                    console.log("----------- You've exited the app successfully! -----------");
             }
-
+            init();
         })
 }
+
+function departments() {
+    connection.query("SELECT * FROM department", function(err, res) {
+        if (err) throw err;
+        console.log(res);
+        init();
+    })
+}
+
+function roles(){
+    connection.query("SELECT * FROM role", function(err, res) {
+        if (err) throw err;
+        console.log(res);
+        init();
+    })
+}
+
+function employees() {
+    connection.query("SELECT * FROM employee INNER JOIN role ON role_id INNER JOIN department ON department_id", function(err, res) {
+        if (err) throw err;
+        console.log(res);
+        init();    
+    })
+}
+
+// // Add Function
+// function addFunc() {
+
+// }
+
+// // Update Function
+// function updateFunc() {
+    
+// }
+
+init();

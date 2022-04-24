@@ -6,6 +6,6 @@ SELECT *
 FROM employee
 JOIN role ON employee.role_id = role.id;
 
-SELECT *
-FROM employee
-JOIN employee ON employee.manager_id = role.id;
+-- SELECT *
+-- FROM employee
+-- JOIN employee ON employee.manager_id = role.id;

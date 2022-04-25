@@ -68,7 +68,7 @@ function departments() {
     connection.query("SELECT * FROM department", function(err, res) {
         if (err) throw err;
         console.log('---◆----------------------◆◆◆----------------------◆---');
-        console.log(res);
+        console.table(res);
         console.log('---◆----------------------◆◆◆----------------------◆---');
         init();
     })
@@ -78,7 +78,7 @@ function roles(){
     connection.query("SELECT * FROM role", function(err, res) {
         if (err) throw err;
         console.log('---◆----------------------◆◆◆----------------------◆---');
-        console.log(res);
+        console.table(res);
         console.log('---◆----------------------◆◆◆----------------------◆---');
         init();
     })
@@ -88,7 +88,7 @@ function employees() {
     connection.query("SELECT * FROM employee", function(err, res) {
         if (err) throw err;
         console.log('---◆----------------------◆◆◆----------------------◆---');
-        console.log(res);
+        console.table(res);
         console.log('---◆----------------------◆◆◆----------------------◆---');
         init();
     })

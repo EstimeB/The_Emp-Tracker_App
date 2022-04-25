@@ -29,7 +29,7 @@ function init() {
                         addFunc();
                         break;
                     case "Update":
-                        updateFunc();
+                        updateEmployeeFunc();
                         break;
                     default:
                         console.log("----------- You've exited the app successfully! -----------");
@@ -201,7 +201,7 @@ function addToEmployee() {
                         return choiceArr;
                     },
             },
-        {
+            {
                 type: 'number',
                 name: 'manager',
                 message: 'Enter manager id.',
@@ -218,7 +218,7 @@ function addToEmployee() {
                 first_name: response.first_name,
                 last_name: response.last_name,
                 role_id: response.role,
-                manager_id: response.manageer
+                manager_id: response.manager
             }, function (err) {
                 if (err) throw err;
                 console.log('---◆----------------------◆◆◆----------------------◆---');
@@ -230,29 +230,70 @@ function addToEmployee() {
 }
 
 // Function to allow user to update the tables' contents
-function updateFunc() {
+function updateEmployeeFunc() {
     inquirer
         .prompt([
             {
-                type: 'list',
-                name: 'name',
-                choices: ["Update department", "Update role", "Update employee", "Exit App"],
-                message: 'Select the table you would like to update',
+                type: 'rawlist',
+                name: 'empToUpdate',
+                message: 'Select employee to be updated.',
+                choices: // Function to select employee to be updated with the index the user entered
+                    function () {
+                        const choiceArr = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArr.push(results[i].last_name)
+                        }
+                        return choiceArr;
+                    },
             }]).then(function (response) {
-                switch (response.name) {
-                    case "Update department":
-                        updateDepartment();
-                        break;
-                    case "Update role":
-                        updateRole();
-                        break;
-                    case "Update employee":
-                        updateEmployee();
-                        break;
-                    default:
-                        console.log("----------- You've exited the app successfully! -----------");
-                }
-                init();
+                const savedEmpName = response.empToUpdate;
+
+                connection.query("SELECT * FROM department", function (err, res) {
+                    if (err) throw err;
+                    inquirer
+                        .prompt([
+                            {
+                                type: 'rawlist',
+                                name: 'role',
+                                message: 'Select role title.',
+                                choices: 
+                                    function () {
+                                        const choiceArr = [];
+                                        for (i = 0; i < results.length; i++) {
+                                            choiceArr.push(results[i].last_name)
+                                        }
+                                        return choiceArr;
+                                    },
+                            },
+                            {
+                                type: 'number',
+                                name: 'manager',
+                                message: 'Enter manager id.',
+                                // To check if types are numbers or strings
+                                validate: function (value) {
+                                    if (isNaN(value) === false) {
+                                        return true;
+                                    }
+                                    return false;
+                                }
+                            }
+                        ]).then(function (response) {
+                            console.log(response);
+                            console.log(savedEmpName);
+
+                            connection.query("UPDATE department SET ? WHERE last_name = ?", [
+                                {
+                                    role_id: response.role,
+                                    manager_id: response.manager
+                                },
+                                savedEmpName
+                            ]),
+                            console.log('---◆----------------------◆◆◆----------------------◆---');
+                            console.log('Updated successfully!' + response.last_name);
+                            console.log('---◆----------------------◆◆◆----------------------◆---');
+                            init();
+                        })
+                })
             })
 }
 

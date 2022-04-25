@@ -29,7 +29,7 @@ function init() {
                         addFunc();
                         break;
                     case "Update":
-                        updateEmployeeFunc();
+                        updateEmployeeRoleFunc();
                         break;
                     default:
                         console.log("----------- You've exited the app successfully! -----------");
@@ -230,7 +230,7 @@ function addToEmployee() {
 }
 
 // Function to allow user to update the tables' contents
-function updateEmployeeFunc() {
+function updateEmployeeRoleFunc() {
     inquirer
         .prompt([
             {

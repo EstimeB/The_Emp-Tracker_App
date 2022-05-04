@@ -61,7 +61,6 @@ function viewFunc() {
                     default:
                         console.log("----------- You've exited the app successfully! -----------");
                 }
-                init();
             })
 }
 function departments() {
@@ -115,7 +114,6 @@ function addFunc() {
                     default:
                         console.log("----------- You've exited the app successfully! -----------");
                 }
-                init();
             })
 }
 function addToDepartment() {
@@ -297,4 +295,3 @@ function updateEmployeeRoleFunc() {
             })
 }
 
-init();

@@ -193,16 +193,16 @@ function addToEmployee() {
                 choices: [1, 2, 3, 4, 5, 6, 7]
                 // Function to select the title associated with the index the user entered
 
-                    // function () {
-                    //     const choiceArr = [];
-                    //     for (i = 0; i < results.length; i++) {
-                    //         choiceArr.push(results[i].title)
-                    //     }
-                    //     return choiceArr;
-                    // },
+                // function () {
+                //     const choiceArr = [];
+                //     for (i = 0; i < results.length; i++) {
+                //         choiceArr.push(results[i].title)
+                //     }
+                //     return choiceArr;
+                // },
             },
             {
-                type:'list',
+                type: 'list',
                 name: 'manager',
                 message: 'Enter manager id.',
                 choices: [23, 24, 25],
@@ -219,11 +219,11 @@ function addToEmployee() {
                 response.first_name,
                 response.last_name,
                 response.role,
-             response.manager
-            ], function (err,data) {
+                response.manager
+            ], function (err, data) {
                 if (err) throw err;
                 console.log('---◆----------------------◆◆◆----------------------◆---');
-                console.log('Added successfully!' , data);
+                console.log('Added successfully!', data);
                 console.log('---◆----------------------◆◆◆----------------------◆---');
                 init();
             })
@@ -235,66 +235,65 @@ function updateEmployeeRoleFunc() {
     inquirer
         .prompt([
             {
-                type: 'rawlist',
+                type: 'list',
                 name: 'empToUpdate',
                 message: 'Select employee to be updated.',
-                choices: // Function to select employee to be updated with the index the user entered
-                    function () {
-                        const choiceArr = [];
-                        for (i = 0; i < results.length; i++) {
-                            choiceArr.push(results[i].last_name)
-                        }
-                        return choiceArr;
-                    },
-            }]).then(function (response) {
-                const savedEmpName = response.empToUpdate;
+                choices: [23, 24, 25, 26, 27, 28, 29, 30, 31]
+            },
+            // Function to select employee to be updated with the index the user entered
+            // function () {
+            //     const choiceArr = [];
+            //     for (i = 0; i < results.length; i++) {
+            //         choiceArr.push(results[i].last_name)
+            //     }
+            //     return choiceArr;
+            // },
+            // }]).then(function (response) {
+            //     const savedEmpName = response.empToUpdate;
 
-                connection.query("SELECT * FROM department", function (err, res) {
-                    if (err) throw err;
-                    inquirer
-                        .prompt([
-                            {
-                                type: 'rawlist',
-                                name: 'role',
-                                message: 'Select role title.',
-                                choices: 
-                                    function () {
-                                        const choiceArr = [];
-                                        for (i = 0; i < results.length; i++) {
-                                            choiceArr.push(results[i].last_name)
-                                        }
-                                        return choiceArr;
-                                    },
-                            },
-                            {
-                                type: 'number',
-                                name: 'manager',
-                                message: 'Enter manager id.',
-                                // To check if types are numbers or strings
-                                validate: function (value) {
-                                    if (isNaN(value) === false) {
-                                        return true;
-                                    }
-                                    return false;
-                                }
-                            }
-                        ]).then(function (response) {
-                            console.log(response);
-                            console.log(savedEmpName);
+            //     connection.query("SELECT * FROM department", function (err, res) {
+            //         if (err) throw err;
+            //         inquirer
+            //             .prompt([
+            {
+                type: 'list',
+                name: 'role',
+                message: 'Select role title.',
+                choices: [1, 2, 3, 4]
+                // function () {
+                //     const choiceArr = [];
+                //     for (i = 0; i < results.length; i++) {
+                //         choiceArr.push(results[i].last_name)
+                //     }
+                //     return choiceArr;
+                // },
+            },
+            {
+                type: 'list',
+                name: 'manager',
+                message: 'Enter manager id.',
+                choices: [23, 24, 25]
+                // To check if types are numbers or strings
+                // validate: function (value) {
+                //     if (isNaN(value) === false) {
+                //         return true;
+                //     }
+                //     return false;
+                // }
+            }
+        ]).then(function (response) {
+            console.log(response);
 
-                            connection.query("UPDATE department SET ? WHERE last_name = ?", [
-                                {
-                                    role_id: response.role,
-                                    manager_id: response.manager
-                                },
-                                savedEmpName
-                            ]),
-                            console.log('---◆----------------------◆◆◆----------------------◆---');
-                            console.log('Updated successfully!' + response.last_name);
-                            console.log('---◆----------------------◆◆◆----------------------◆---');
-                            init();
-                        })
-                })
+            connection.query("UPDATE employee SET role_id =? , manager_id =? WHERE id = ?", [response.role, response.manager, response.empToUpdate
+            ], function (err, data) {
+                if (err) throw err;
+
+                console.log('---◆----------------------◆◆◆----------------------◆---');
+                console.log('Updated successfully!' + response.last_name);
+                console.log('---◆----------------------◆◆◆----------------------◆---');
+                init();
             })
+        })
+    // })
 }
 

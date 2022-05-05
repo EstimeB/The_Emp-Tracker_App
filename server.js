@@ -190,37 +190,40 @@ function addToEmployee() {
                 type: 'rawlist',
                 name: 'role',
                 message: 'Select a role title.',
-                choices: // Function to select the title associated with the index the user entered
-                    function () {
-                        const choiceArr = [];
-                        for (i = 0; i < results.length; i++) {
-                            choiceArr.push(results[i].title)
-                        }
-                        return choiceArr;
-                    },
+                choices: [1, 2, 3, 4, 5, 6, 7]
+                // Function to select the title associated with the index the user entered
+
+                    // function () {
+                    //     const choiceArr = [];
+                    //     for (i = 0; i < results.length; i++) {
+                    //         choiceArr.push(results[i].title)
+                    //     }
+                    //     return choiceArr;
+                    // },
             },
             {
-                type: 'number',
+                type:'list',
                 name: 'manager',
                 message: 'Enter manager id.',
+                choices: [23, 24, 25],
                 // To check if types are numbers or strings
-                validate: function (value) {
-                    if (isNaN(value) === false) {
-                        return true;
-                    }
-                    return false;
-                }
+                // validate: function (value) {
+                //     if (isNaN(value) === false) {
+                //         return true;
+                //     }
+                //     return false;
+                // }
             }
         ]).then(function (response) {
-            connection.query("INSERT INTO role VALUES (?)", {
-                first_name: response.first_name,
-                last_name: response.last_name,
-                role_id: response.role,
-                manager_id: response.manager
-            }, function (err) {
+            connection.query("INSERT INTO employee (first_name,last_name,role_id,manager_id)VALUES (?,?,?,?)", [
+                response.first_name,
+                response.last_name,
+                response.role,
+             response.manager
+            ], function (err,data) {
                 if (err) throw err;
                 console.log('---◆----------------------◆◆◆----------------------◆---');
-                console.log('Added successfully!' + response.first_name.last_name);
+                console.log('Added successfully!' , data);
                 console.log('---◆----------------------◆◆◆----------------------◆---');
                 init();
             })

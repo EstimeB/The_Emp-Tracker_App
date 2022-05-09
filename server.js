@@ -21,6 +21,7 @@ function init() {
                 choices: ["View", "Add", "Update", "Exit App"],
                 message: 'Would you like to view, add, update, or exit the app?',
             }]).then(function (response) {
+                //response will be the key value pairs from inquirer prompt
                 switch (response.name) {
                     case "View":
                         viewFunc();
@@ -173,93 +174,79 @@ function addToRole() {
         })
 }
 function addToEmployee() {
-    inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'first_name',
-                message: "Enter employee's first name."
-            },
-            {
-                type: 'input',
-                name: 'last_name',
-                message: "Enter employee's last name."
-            },
-            {
-                // This type is to allow user to enter the index of their choice
-                type: 'rawlist',
-                name: 'role',
-                message: 'Select a role title.',
-                choices: [1, 2, 3, 4, 5, 6, 7]
-                // Function to select the title associated with the index the user entered
+    // SQL Query call, will pull role's data/field content and send results to the role rawlist function (choices)
+    connection.query("Select * FROM role", function (err, results) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'first_name',
+                    message: "Enter employee's first name."
+                },
+                {
+                    type: 'input',
+                    name: 'last_name',
+                    message: "Enter employee's last name."
+                },
+                {
+                    // This type is to allow user to enter the index of their choice
+                    type: 'rawlist',
+                    name: 'role',
+                    message: 'Select a role title.',
+                    choices:
+                        //[1, 2, 3, 4, 5, 6, 7]
+                        // Function to select the title associated with the index the user entered
 
-                // function () {
-                //     const choiceArr = [];
-                //     for (i = 0; i < results.length; i++) {
-                //         choiceArr.push(results[i].title)
-                //     }
-                //     return choiceArr;
-                // },
-            },
-            {
-                type: 'list',
-                name: 'manager',
-                message: 'Enter manager id.',
-                choices: [23, 24, 25],
-                // To check if types are numbers or strings
-                // validate: function (value) {
-                //     if (isNaN(value) === false) {
-                //         return true;
-                //     }
-                //     return false;
-                // }
-            }
-        ]).then(function (response) {
-            connection.query("INSERT INTO employee (first_name,last_name,role_id,manager_id)VALUES (?,?,?,?)", [
-                response.first_name,
-                response.last_name,
-                response.role,
-                response.manager
-            ], function (err, data) {
-                if (err) throw err;
-                console.log('---◆----------------------◆◆◆----------------------◆---');
-                console.log('Added successfully!', data);
-                console.log('---◆----------------------◆◆◆----------------------◆---');
-                init();
+                        function () {
+                            let choiceArr = [];
+                            for (i = 0; i < results.length; i++) {
+                                choiceArr.push(results[i].title)
+                            }
+                            return choiceArr;
+                        },
+                },
+                {
+                    type: 'number',
+                    name: 'manager',
+                    message: 'Enter manager id.',
+                    //choices: [23, 24, 25],
+                    // To check if types are numbers or strings
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            ]).then(function (response) {
+                connection.query("INSERT INTO employee SET ?", {
+                    first_name: response.first_name,
+                    last_name: response.last_name,
+                    role_id: response.role,
+                    manager_id: response.manager
+                }, function (err, response) {
+                    if (err) throw err;
+                    console.log('---◆----------------------◆◆◆----------------------◆---');
+                    console.log('Successfully added' + response.first_name + response.last_name + '!');
+                    console.log('---◆----------------------◆◆◆----------------------◆---');
+                    init();
+                })
             })
         })
-}
+    }
 
-// Function to allow user to update the tables' contents
-function updateEmployeeRoleFunc() {
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'empToUpdate',
-                message: 'Select employee to be updated.',
-                choices: [23, 24, 25, 26, 27, 28, 29, 30, 31]
-            },
-            // Function to select employee to be updated with the index the user entered
-            // function () {
-            //     const choiceArr = [];
-            //     for (i = 0; i < results.length; i++) {
-            //         choiceArr.push(results[i].last_name)
-            //     }
-            //     return choiceArr;
-            // },
-            // }]).then(function (response) {
-            //     const savedEmpName = response.empToUpdate;
-
-            //     connection.query("SELECT * FROM department", function (err, res) {
-            //         if (err) throw err;
-            //         inquirer
-            //             .prompt([
-            {
-                type: 'list',
-                name: 'role',
-                message: 'Select role title.',
-                choices: [1, 2, 3, 4]
+    // Function to allow user to update the tables' contents
+    function updateEmployeeRoleFunc() {
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'empToUpdate',
+                    message: 'Select employee to be updated.',
+                    choices: [23, 24, 25, 26, 27, 28, 29, 30, 31]
+                },
+                // Function to select employee to be updated with the index the user entered
                 // function () {
                 //     const choiceArr = [];
                 //     for (i = 0; i < results.length; i++) {
@@ -267,33 +254,52 @@ function updateEmployeeRoleFunc() {
                 //     }
                 //     return choiceArr;
                 // },
-            },
-            {
-                type: 'list',
-                name: 'manager',
-                message: 'Enter manager id.',
-                choices: [23, 24, 25]
-                // To check if types are numbers or strings
-                // validate: function (value) {
-                //     if (isNaN(value) === false) {
-                //         return true;
-                //     }
-                //     return false;
-                // }
-            }
-        ]).then(function (response) {
-            console.log(response);
+                // }]).then(function (response) {
+                //     const savedEmpName = response.empToUpdate;
 
-            connection.query("UPDATE employee SET role_id =? , manager_id =? WHERE id = ?", [response.role, response.manager, response.empToUpdate
-            ], function (err, data) {
-                if (err) throw err;
+                //     connection.query("SELECT * FROM department", function (err, res) {
+                //         if (err) throw err;
+                //         inquirer
+                //             .prompt([
+                {
+                    type: 'list',
+                    name: 'role',
+                    message: 'Select role title.',
+                    choices: [1, 2, 3, 4]
+                    // function () {
+                    //     const choiceArr = [];
+                    //     for (i = 0; i < results.length; i++) {
+                    //         choiceArr.push(results[i].last_name)
+                    //     }
+                    //     return choiceArr;
+                    // },
+                },
+                {
+                    type: 'list',
+                    name: 'manager',
+                    message: 'Enter manager id.',
+                    choices: [23, 24, 25]
+                    // To check if types are numbers or strings
+                    // validate: function (value) {
+                    //     if (isNaN(value) === false) {
+                    //         return true;
+                    //     }
+                    //     return false;
+                    // }
+                }
+            ]).then(function (response) {
+                console.log(response);
 
-                console.log('---◆----------------------◆◆◆----------------------◆---');
-                console.log('Updated successfully!' + response.last_name);
-                console.log('---◆----------------------◆◆◆----------------------◆---');
-                init();
+                connection.query("UPDATE employee SET role_id =? , manager_id =? WHERE id = ?", [response.role, response.manager, response.empToUpdate
+                ], function (err, data) {
+                    if (err) throw err;
+
+                    console.log('---◆----------------------◆◆◆----------------------◆---');
+                    console.log('Updated successfully!' + response.last_name);
+                    console.log('---◆----------------------◆◆◆----------------------◆---');
+                    init();
+                })
             })
-        })
-    // })
-}
+        // })
+    }
 

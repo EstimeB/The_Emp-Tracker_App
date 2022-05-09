@@ -228,10 +228,11 @@ function addToEmployee() {
                 }, function (err, response) {
                     if (err) throw err;
                     console.log('---◆----------------------◆◆◆----------------------◆---');
-                    console.log('Successfully added' + response.first_name + response.last_name + '!');
+                    console.log('Employee is successfully added!');
                     console.log('---◆----------------------◆◆◆----------------------◆---');
                     init();
                 })
+
             })
         })
     }

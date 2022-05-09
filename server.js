@@ -124,7 +124,7 @@ function addToDepartment() {
                 name: 'department',
                 message: 'Please input the department name you would like to add.'
             }]).then(function (response) {
-                connection.query("INSERT INTO department VALUES (?)", [response.department], function (err) {
+                connection.query("INSERT INTO department VALUES (DEFAULT, ?)", [response.department], function (err) {
                     if (err) throw err;
                     console.log('---◆----------------------◆◆◆----------------------◆---');
                     console.log('Added successfully!' + response.department);
@@ -159,7 +159,7 @@ function addToRole() {
                 }
             }
         ]).then(function (response) {
-            connection.query("INSERT INTO role VALUES (?)", {
+            connection.query("INSERT INTO role SET ?", {
                 title: response.role,
                 salary: response.salary,
                 department_id: response.department_id

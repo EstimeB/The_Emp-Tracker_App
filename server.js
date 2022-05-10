@@ -128,7 +128,7 @@ function addToDepartment() {
                 connection.query("INSERT INTO department VALUES (DEFAULT, ?)", [response.department], function (err) {
                     if (err) throw err;
                     console.log('---◆----------------------◆◆◆----------------------◆---');
-                    console.log('Added successfully!' + response.department);
+                    console.log(response.department + 'added successfully!');
                     console.log('---◆----------------------◆◆◆----------------------◆---');
                     init();
                 })
@@ -167,7 +167,7 @@ function addToRole() {
             }, function (err) {
                 if (err) throw err;
                 console.log('---◆----------------------◆◆◆----------------------◆---');
-                console.log('Added successfully!' + response.role);
+                console.log(response.role + 'added successfully!');
                 console.log('---◆----------------------◆◆◆----------------------◆---');
                 init();
             })
@@ -194,10 +194,7 @@ function addToEmployee() {
                     type: 'rawlist',
                     name: 'role',
                     message: 'Select a role title.',
-                    choices:
-                        //[1, 2, 3, 4, 5, 6, 7]
-                        // Function to select the title associated with the index the user entered
-
+                    choices: // Function to select the title associated with the index the user entered
                         function () {
                             let choiceArr = [];
                             for (i = 0; i < results.length; i++) {
@@ -210,7 +207,6 @@ function addToEmployee() {
                     type: 'number',
                     name: 'manager',
                     message: 'Enter manager id.',
-                    //choices: [23, 24, 25],
                     // To check if types are numbers or strings
                     validate: function (value) {
                         if (isNaN(value) === false) {
@@ -288,9 +284,6 @@ function updateEmployeeRoleFunc() {
                                 }
                             }
                         ]).then(function (response) {
-                            console.log(response);
-                            console.log(savedEmpName);
-
                             connection.query("UPDATE employee SET ? WHERE last_name = ?", [
                                 {
                                     role_id: response.role,
